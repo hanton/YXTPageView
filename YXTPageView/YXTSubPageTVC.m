@@ -21,7 +21,7 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  self.view.backgroundColor = [UIColor blackColor];
+  self.view.backgroundColor = [UIColor whiteColor];
   
   if (self.tableView == nil) {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];

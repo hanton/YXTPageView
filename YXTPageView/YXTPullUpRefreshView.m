@@ -21,7 +21,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 {
   self = [super initWithFrame:frame];
   if (self) {
-    self.backgroundColor = [UIColor blueColor];
+    
   }
   return self;
 }
@@ -30,11 +30,10 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   self.owner = owner;
   self.delegate = delegate;
   
-  [_owner addSubview:self];
+  [self.owner addSubview:self];
 }
 
-- (void)updateOffsetY:(CGFloat)y
-{
+- (void)updateOffsetY:(CGFloat)y {
   CGRect originFrame = self.frame;
   self.frame = CGRectMake(originFrame.origin.x, y, originFrame.size.width, originFrame.size.height);
 }
@@ -60,7 +59,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   if (self.isLoading) return;
   self.isDragging = NO;
   
-  if(scrollView.contentOffset.y > 0 && [self contentOffsetBottom:scrollView] <= -YXTPullUpThreshold){
+  if(scrollView.contentOffset.y > 0 && [self contentOffsetBottom:scrollView] <= -YXTPullUpThreshold) {
     [self startLoading];
   }
 }
@@ -68,7 +67,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
   if (self.isLoading) return;
   
-  if(scrollView.contentOffset.y > 0 && [self contentOffsetBottom:scrollView] <= -YXTPullUpThreshold){
+  if(scrollView.contentOffset.y > 0 && [self contentOffsetBottom:scrollView] <= -YXTPullUpThreshold) {
     [self startLoading];
   }
 }

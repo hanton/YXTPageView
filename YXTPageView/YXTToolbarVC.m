@@ -20,14 +20,14 @@
 }
 
 - (IBAction)pressPhoneButton:(id)sender {
-  if ([self.delegate respondsToSelector:@selector(didPressedPhoneButton)]) {
-    [self.delegate performSelector:@selector(didPressedPhoneButton) withObject:nil];
+  if ([self.delegate respondsToSelector:@selector(didPressedLeftButton)]) {
+    [self.delegate performSelector:@selector(didPressedLeftButton) withObject:nil];
   }
 }
 
 - (IBAction)pressMapButton:(id)sender {
-  if ([self.delegate respondsToSelector:@selector(didPressedMapButton)]) {
-    [self.delegate performSelector:@selector(didPressedMapButton) withObject:nil];
+  if ([self.delegate respondsToSelector:@selector(didPressedRightButton)]) {
+    [self.delegate performSelector:@selector(didPressedRightButton) withObject:nil];
   }
 }
 

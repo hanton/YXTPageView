@@ -15,6 +15,6 @@
 @end
 
 @protocol YXTToolbarDelegate <NSObject>
-- (void)didPressedPhoneButton;
-- (void)didPressedMapButton;
+- (void)didPressedLeftButton;
+- (void)didPressedRightButton;
 @end
