@@ -18,8 +18,9 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   // Do any additional setup after loading the view, typically from a nib.
-  
-  self.scrollView.backgroundColor = [UIColor cyanColor];
+  UIView *mainPage = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.scrollView.frame), CGRectGetHeight(self.scrollView.frame))];
+  mainPage.backgroundColor = [UIColor cyanColor];
+  [self.scrollView addSubview:mainPage];
   self.subTableViewController = [SubPageTVC new];
 }
 

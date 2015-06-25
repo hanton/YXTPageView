@@ -7,65 +7,49 @@
 //
 
 #import "YXTMainPageVC.h"
-#import "YXTPullUpRefreshView.h"
 
-static const CGFloat YXTPullFreshViewHeight = 0.0;
+static const CGFloat YXTPullUpThreshold = 50.0;
 
-@interface YXTMainPageVC () <YXTPullUpRefreshViewDelegate, YXTPullDownRefreshViewDelegate, YXTToolbarDelegate, UIScrollViewDelegate>
-@property(nonatomic) BOOL isResponseToScroll;
-@property(nonatomic, strong) YXTPullUpRefreshView *pullFreshView;
+@interface YXTMainPageVC () <YXTSubPageDelegate, YXTToolbarDelegate, UIScrollViewDelegate>
+@property (nonatomic) BOOL isDragging;
+@property (nonatomic) BOOL isLoading;
 @end
 
 @implementation YXTMainPageVC
 
-#pragma mark View Lifecycle
+#pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  [self setupScrollView];
-  [self setupToolbar];
-  
-  self.isResponseToScroll = YES;
+  [self addScrollView];
+  [self addToolbar];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
   
-  [self setupMainButton];
-  [self addRefreshView];
+  [self addMainButton];
   [self addSubPage];
 }
 
-#pragma mark Setup Subviews
+#pragma mark - Setup Subviews
 
-- (void)setupScrollView {
+- (void)addScrollView {
   self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
   self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height + 0.3);
   self.scrollView.delegate = self;
-  self.scrollView.backgroundColor = [UIColor blackColor];
+  self.scrollView.backgroundColor = [UIColor whiteColor];
   [self.view addSubview:self.scrollView];
 }
 
-- (void)setupToolbar {
+- (void)addToolbar {
   self.toolbarVC = [YXTToolbarVC new];
   self.toolbarVC.view.frame = CGRectMake(0.0, self.view.frame.size.height - self.toolbarVC.view.frame.size.height, self.view.frame.size.width, self.toolbarVC.view.frame.size.height);
   self.toolbarVC.delegate = self;
   self.toolbarVC.view.alpha = 1.0;
   [self.view addSubview:self.toolbarVC.view];
-}
-
-- (void)addRefreshView {
-  if (self.pullFreshView == nil) {
-    float originY = self.scrollView.contentSize.height;
-    self.pullFreshView = [[YXTPullUpRefreshView alloc]initWithFrame:CGRectMake(0, originY, self.view.frame.size.width, YXTPullFreshViewHeight)];
-    self.pullFreshView.backgroundColor = [UIColor blackColor];
-  }
-  
-  if (!self.pullFreshView.superview) {
-    [self.pullFreshView setupWithOwner:self.scrollView delegate:self];
-  }
 }
 
 - (void)addSubPage {
@@ -74,11 +58,12 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
   }
   
   self.subTableViewController.mainViewController = self;
-  self.subTableViewController.tableView.frame = CGRectMake(0, self.view.frame.size.height + YXTPullFreshViewHeight, self.view.frame.size.width, self.view.frame.size.height);
+  self.subTableViewController.tableView.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+  self.subTableViewController.delegate = self;
   [self.scrollView addSubview:self.subTableViewController.tableView];
 }
 
-- (void)setupMainButton {
+- (void)addMainButton {
   self.mainButton = [UIButton buttonWithType:UIButtonTypeCustom];
   [self.mainButton addTarget:self
                       action:@selector(didPressedMainButton)
@@ -95,7 +80,7 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
   [self.view addSubview:self.mainButton];
 }
 
-#pragma mark YXTToolbarDelegate
+#pragma mark - YXTToolbarDelegate
 
 - (void)didPressedMainButton {
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Click Main Button"
@@ -124,9 +109,61 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
   [alert show];
 }
 
-#pragma mark YXTPullUpRefreshViewDelegate
+#pragma mark - YXTSubPageDelegate
 
-- (void)pullUpRefreshDidFinish {
+- (void)pullDownDidFinish {
+  [self.subTableViewController stopLoading];
+  
+  __weak typeof(self) weakSelf = self;
+  [UIView animateWithDuration:0.3 animations:^{
+    weakSelf.scrollView.contentInset = UIEdgeInsetsZero;
+  }];
+  
+  self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x, self.scrollView.contentOffset.y);
+  self.scrollView.scrollEnabled = YES;
+  
+  [UIView animateWithDuration:0.3 animations:^{
+    weakSelf.toolbarVC.view.alpha = 1.0;
+  }];
+}
+
+- (void)pullDownDidFail {
+  [self resetToolbar];
+}
+
+- (void)pullDownTransitToNextViewByPercentage:(NSNumber *)percentage {
+  self.toolbarVC.view.alpha = [percentage floatValue];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  if (!self.isLoading && self.scrollView.contentOffset.y < 0) {
+    return;
+  } else if (self.isDragging && self.scrollView.contentOffset.y >= 0) {
+      NSNumber *percentage = [NSNumber numberWithFloat: 1.0 - (self.scrollView.contentOffset.y / YXTPullUpThreshold)];
+    [self pullUpTransitToNextViewByPercentage:percentage];
+  }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+  if (self.isLoading) return;
+  self.isDragging = YES;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+  if (self.isLoading) return;
+  self.isDragging = NO;
+  
+  if(scrollView.contentOffset.y > 0 && self.scrollView.contentOffset.y >= YXTPullUpThreshold) {
+    [self startLoading];
+  }
+  [self resetToolbar];
+}
+
+#pragma mark - Private Methods
+
+- (void)pullUpDidFinish {
   [self.subTableViewController.tableView reloadData];
   
   __weak typeof(self) weakSelf = self;
@@ -136,76 +173,25 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
   
   self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width, self.scrollView.contentSize.height);
   self.scrollView.scrollEnabled = NO;
-  [self.pullFreshView stopLoading];
-  self.pullFreshView.hidden = YES;
-  self.isResponseToScroll = NO;
+  [self stopLoading];
 }
 
-- (void)pullUpRefreshTransitToNextViewByPercentage:(NSNumber *)percentage {
+- (void)pullUpTransitToNextViewByPercentage:(NSNumber *)percentage {
   self.toolbarVC.view.alpha = [percentage floatValue];
 }
 
-#pragma mark YXTPullDownRefreshViewDelegate
-
-- (void)pullDownRefreshDidFinish {
-  [self.subTableViewController.pullFreshView stopLoading];
-  
-  __weak typeof(self) weakSelf = self;
-  [UIView animateWithDuration:0.3 animations:^{
-    weakSelf.scrollView.contentInset = UIEdgeInsetsZero;
-  }];
-  
-  self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x, self.scrollView.contentOffset.y);
-  self.scrollView.scrollEnabled = YES;
-  self.pullFreshView.hidden = NO;
-  self.isResponseToScroll = YES;
-  
-  [UIView animateWithDuration:0.3 animations:^{
-    weakSelf.toolbarVC.view.alpha = 1.0;
-  }];
-}
-
-- (void)pullDownRefreshTransitToNextViewByPercentage:(NSNumber *)percentage {
-  self.toolbarVC.view.alpha = [percentage floatValue];
-}
-
-#pragma mark UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-  if (self.isResponseToScroll) {
-    [self.pullFreshView scrollViewDidScroll:scrollView];
-  } else {
-    [self.subTableViewController.pullFreshView scrollViewDidScroll:scrollView];
+- (void)startLoading {
+  if (self.isLoading) {
+    return;
   }
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-  if (self.isResponseToScroll) {
-    [self.pullFreshView scrollViewWillBeginDragging:scrollView];
-  } else {
-    [self.subTableViewController.pullFreshView scrollViewWillBeginDragging:scrollView];
-  }
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-  if (self.isResponseToScroll) {
-    [self.pullFreshView scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-  } else {
-    [self.subTableViewController.pullFreshView scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
-  }
+  self.isLoading = YES;
   
-  [self resetToolbar];
+  [self pullUpDidFinish];
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-  if (self.isResponseToScroll) {
-    [self.pullFreshView scrollViewDidEndDecelerating:scrollView];
-  } else {
-    [self.subTableViewController.pullFreshView scrollViewDidEndDecelerating:scrollView];
-  }
+- (void)stopLoading {
+  self.isLoading = NO;
 }
-
-#pragma mark Private Methods
 
 - (void)resetToolbar {
   __weak typeof(self) weakSelf = self;

@@ -17,8 +17,6 @@
 		408965B51B32DADE002A39A2 /* YXTSubPageTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965B01B32DADE002A39A2 /* YXTSubPageTVC.m */; };
 		408965B61B32DADE002A39A2 /* YXTToolbarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965B21B32DADE002A39A2 /* YXTToolbarVC.m */; };
 		408965B71B32DADE002A39A2 /* YXTToolbarVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408965B31B32DADE002A39A2 /* YXTToolbarVC.xib */; };
-		408965BC1B32DB87002A39A2 /* YXTPullDownRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965B91B32DB87002A39A2 /* YXTPullDownRefreshView.m */; };
-		408965BD1B32DB87002A39A2 /* YXTPullUpRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965BB1B32DB87002A39A2 /* YXTPullUpRefreshView.m */; };
 		408965C01B32DC43002A39A2 /* SubPageTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965BF1B32DC43002A39A2 /* SubPageTVC.m */; };
 		408965C41B32DE45002A39A2 /* SubPageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 408965C21B32DE45002A39A2 /* SubPageCell.m */; };
 		408965C51B32DE45002A39A2 /* SubPageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 408965C31B32DE45002A39A2 /* SubPageCell.xib */; };
@@ -54,10 +52,6 @@
 		408965B11B32DADE002A39A2 /* YXTToolbarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YXTToolbarVC.h; sourceTree = "<group>"; };
 		408965B21B32DADE002A39A2 /* YXTToolbarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YXTToolbarVC.m; sourceTree = "<group>"; };
 		408965B31B32DADE002A39A2 /* YXTToolbarVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YXTToolbarVC.xib; sourceTree = "<group>"; };
-		408965B81B32DB87002A39A2 /* YXTPullDownRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YXTPullDownRefreshView.h; sourceTree = "<group>"; };
-		408965B91B32DB87002A39A2 /* YXTPullDownRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YXTPullDownRefreshView.m; sourceTree = "<group>"; };
-		408965BA1B32DB87002A39A2 /* YXTPullUpRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YXTPullUpRefreshView.h; sourceTree = "<group>"; };
-		408965BB1B32DB87002A39A2 /* YXTPullUpRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YXTPullUpRefreshView.m; sourceTree = "<group>"; };
 		408965BE1B32DC43002A39A2 /* SubPageTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubPageTVC.h; sourceTree = "<group>"; };
 		408965BF1B32DC43002A39A2 /* SubPageTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubPageTVC.m; sourceTree = "<group>"; };
 		408965C11B32DE45002A39A2 /* SubPageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubPageCell.h; sourceTree = "<group>"; };
@@ -114,8 +108,6 @@
 				408965C11B32DE45002A39A2 /* SubPageCell.h */,
 				408965C21B32DE45002A39A2 /* SubPageCell.m */,
 				408965C31B32DE45002A39A2 /* SubPageCell.xib */,
-				408965931B32DA6F002A39A2 /* Images.xcassets */,
-				408965951B32DA6F002A39A2 /* LaunchScreen.xib */,
 				408965861B32DA6F002A39A2 /* Supporting Files */,
 			);
 			path = YXTPageViewDemo;
@@ -124,6 +116,8 @@
 		408965861B32DA6F002A39A2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				408965931B32DA6F002A39A2 /* Images.xcassets */,
+				408965951B32DA6F002A39A2 /* LaunchScreen.xib */,
 				408965871B32DA6F002A39A2 /* Info.plist */,
 				408965881B32DA6F002A39A2 /* main.m */,
 			);
@@ -157,10 +151,6 @@
 				408965B11B32DADE002A39A2 /* YXTToolbarVC.h */,
 				408965B21B32DADE002A39A2 /* YXTToolbarVC.m */,
 				408965B31B32DADE002A39A2 /* YXTToolbarVC.xib */,
-				408965B81B32DB87002A39A2 /* YXTPullDownRefreshView.h */,
-				408965B91B32DB87002A39A2 /* YXTPullDownRefreshView.m */,
-				408965BA1B32DB87002A39A2 /* YXTPullUpRefreshView.h */,
-				408965BB1B32DB87002A39A2 /* YXTPullUpRefreshView.m */,
 			);
 			path = YXTPageView;
 			sourceTree = "<group>";
@@ -268,10 +258,8 @@
 			files = (
 				4089658F1B32DA6F002A39A2 /* MainPageVC.m in Sources */,
 				4089658C1B32DA6F002A39A2 /* AppDelegate.m in Sources */,
-				408965BD1B32DB87002A39A2 /* YXTPullUpRefreshView.m in Sources */,
 				408965C41B32DE45002A39A2 /* SubPageCell.m in Sources */,
 				408965B51B32DADE002A39A2 /* YXTSubPageTVC.m in Sources */,
-				408965BC1B32DB87002A39A2 /* YXTPullDownRefreshView.m in Sources */,
 				408965B41B32DADE002A39A2 /* YXTMainPageVC.m in Sources */,
 				408965B61B32DADE002A39A2 /* YXTToolbarVC.m in Sources */,
 				408965891B32DA6F002A39A2 /* main.m in Sources */,

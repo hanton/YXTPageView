@@ -7,12 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YXTPullDownRefreshView.h"
+
+@protocol YXTSubPageDelegate;
 
 @interface YXTSubPageTVC : UITableViewController
-
+@property (nonatomic, weak) id<YXTSubPageDelegate> delegate;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) UIViewController *mainViewController;
-@property(nonatomic, strong) YXTPullDownRefreshView *pullFreshView;
 
+- (void)stopLoading;
+@end
+
+@protocol YXTSubPageDelegate <NSObject>
+- (void)pullDownDidFail;
+- (void)pullDownDidFinish;
+- (void)pullDownTransitToNextViewByPercentage:(NSNumber *)percentage;
 @end

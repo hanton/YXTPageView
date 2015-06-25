@@ -9,9 +9,11 @@
 #import "YXTSubPageTVC.h"
 
 static const CGFloat YXTPullFreshViewHeight = 0.0;
+static const CGFloat YXTPullDownThreshold = 50.0;
 
 @interface YXTSubPageTVC () <UIScrollViewDelegate>
-
+@property (nonatomic) BOOL isDragging;
+@property (nonatomic) BOOL isLoading;
 @end
 
 @implementation YXTSubPageTVC
@@ -29,38 +31,62 @@ static const CGFloat YXTPullFreshViewHeight = 0.0;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
   }
-  
   self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   self.tableView.showsVerticalScrollIndicator = NO;
-  [self addRefreshView];
   
   self.clearsSelectionOnViewWillAppear = YES;
-}
-
-#pragma mark - Setup Subviews
-
-- (void)addRefreshView {
-  if (self.pullFreshView == nil) {
-    self.pullFreshView = [[YXTPullDownRefreshView alloc]initWithFrame:CGRectMake(0, -YXTPullFreshViewHeight, self.view.frame.size.width, YXTPullFreshViewHeight)];
-  }
-  
-  if (!self.pullFreshView.superview) {
-    [self.pullFreshView setupWithOwner:self.tableView delegate:(id<YXTPullDownRefreshViewDelegate>)self.mainViewController];
-  }
 }
 
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-  [self.pullFreshView scrollViewWillBeginDragging:scrollView];
+  if (self.isLoading) return;
+  self.isDragging = YES;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-  [self.pullFreshView scrollViewDidScroll:scrollView];
+  if (self.isLoading && scrollView.contentOffset.y > 0) {
+    return;
+  } else if (self.isDragging && scrollView.contentOffset.y <= 0.0) {
+    if ([self.delegate respondsToSelector:@selector(pullDownTransitToNextViewByPercentage:)]) {
+      CGFloat pullDownOffset = (scrollView.contentOffset.y + YXTPullDownThreshold) / YXTPullDownThreshold;
+      if (pullDownOffset < 0.0) {
+        pullDownOffset = 0.0;
+      }
+      NSNumber *percentage = [NSNumber numberWithFloat:pullDownOffset];
+      [self.delegate performSelector:@selector(pullDownTransitToNextViewByPercentage:) withObject:percentage];
+    }
+  }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-  [self.pullFreshView scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+  if (self.isLoading) return;
+  self.isDragging = NO;
+  
+  if(scrollView.contentOffset.y <= -YXTPullDownThreshold) {
+    [self startLoading];
+  } else if(scrollView.contentOffset.y < 0.0) {
+    if ([self.delegate respondsToSelector:@selector(pullDownDidFail)]) {
+      [self.delegate performSelector:@selector(pullDownDidFail) withObject:nil];
+    }
+  }
+}
+
+#pragma mark - Private Method
+
+- (void)startLoading {
+  if (self.isLoading) {
+    return;
+  }
+  self.isLoading = YES;
+  
+  if ([self.delegate respondsToSelector:@selector(pullDownDidFinish)]) {
+    [self.delegate performSelector:@selector(pullDownDidFinish) withObject:nil];
+  }
+}
+
+- (void)stopLoading {
+  self.isLoading = NO;
 }
 
 @end
