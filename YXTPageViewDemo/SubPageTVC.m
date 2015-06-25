@@ -21,17 +21,22 @@ static NSString* const SubPageCellIdentifier = @"SubPageCell";
   [super viewDidLoad];
   
   [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([SubPageCell class]) bundle:nil] forCellReuseIdentifier:SubPageCellIdentifier];
+  
+  self.tableView.delegate = self;
+  self.tableView.dataSource = self;
+  self.tableView.showsVerticalScrollIndicator = NO;
+  //  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  
+  self.clearsSelectionOnViewWillAppear = YES;
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  // Return the number of sections.
   return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  // Return the number of rows in the section.
   return 28;
 }
 
@@ -42,4 +47,9 @@ static NSString* const SubPageCellIdentifier = @"SubPageCell";
   
   return cell;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  return 150.0;
+}
+
 @end

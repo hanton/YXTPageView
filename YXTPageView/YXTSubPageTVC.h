@@ -15,7 +15,6 @@
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) UIViewController *mainViewController;
 
-- (void)stopLoading;
 @end
 
 @protocol YXTSubPageDelegate <NSObject>

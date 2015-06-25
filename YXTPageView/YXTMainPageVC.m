@@ -12,7 +12,6 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 
 @interface YXTMainPageVC () <YXTSubPageDelegate, YXTToolbarDelegate, UIScrollViewDelegate>
 @property (nonatomic) BOOL isDragging;
-@property (nonatomic) BOOL isLoading;
 @end
 
 @implementation YXTMainPageVC
@@ -22,15 +21,17 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  self.isDragging = NO;
+  
   [self addScrollView];
   [self addToolbar];
+  [self addMainButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
   
-  [self addMainButton];
   [self addSubPage];
 }
 
@@ -38,7 +39,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 
 - (void)addScrollView {
   self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-  self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height + 0.3);
+  self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) + 0.3);
   self.scrollView.delegate = self;
   self.scrollView.backgroundColor = [UIColor whiteColor];
   [self.view addSubview:self.scrollView];
@@ -46,7 +47,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 
 - (void)addToolbar {
   self.toolbarVC = [YXTToolbarVC new];
-  self.toolbarVC.view.frame = CGRectMake(0.0, self.view.frame.size.height - self.toolbarVC.view.frame.size.height, self.view.frame.size.width, self.toolbarVC.view.frame.size.height);
+  self.toolbarVC.view.frame = CGRectMake(0.0, CGRectGetHeight(self.view.frame) - CGRectGetHeight(self.toolbarVC.view.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.toolbarVC.view.frame));
   self.toolbarVC.delegate = self;
   self.toolbarVC.view.alpha = 1.0;
   [self.view addSubview:self.toolbarVC.view];
@@ -58,7 +59,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   }
   
   self.subTableViewController.mainViewController = self;
-  self.subTableViewController.tableView.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height);
+  self.subTableViewController.tableView.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
   self.subTableViewController.delegate = self;
   [self.scrollView addSubview:self.subTableViewController.tableView];
 }
@@ -71,8 +72,8 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   [self.mainButton setBackgroundColor:[UIColor grayColor]];
   CGFloat mainButtonHeight = 50.0;
   CGFloat mainButtonWidth = 50.0;
-  CGFloat mainButtonX = (self.view.frame.size.width - mainButtonWidth) / 2.0;
-  CGFloat mainButtonY = (self.view.frame.size.height - mainButtonHeight) - 8.0;
+  CGFloat mainButtonX = (CGRectGetWidth(self.view.frame) - mainButtonWidth) / 2.0;
+  CGFloat mainButtonY = (CGRectGetHeight(self.view.frame) - mainButtonHeight) - 8.0;
   self.mainButton.frame = CGRectMake(mainButtonX, mainButtonY, mainButtonWidth, mainButtonHeight);
   self.mainButton.layer.cornerRadius = mainButtonWidth / 2.0;
   self.mainButton.layer.masksToBounds = YES;
@@ -111,9 +112,7 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 
 #pragma mark - YXTSubPageDelegate
 
-- (void)pullDownDidFinish {
-  [self.subTableViewController stopLoading];
-  
+- (void)pullDownDidFinish {  
   __weak typeof(self) weakSelf = self;
   [UIView animateWithDuration:0.3 animations:^{
     weakSelf.scrollView.contentInset = UIEdgeInsetsZero;
@@ -138,25 +137,21 @@ static const CGFloat YXTPullUpThreshold = 50.0;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-  if (!self.isLoading && self.scrollView.contentOffset.y < 0) {
-    return;
-  } else if (self.isDragging && self.scrollView.contentOffset.y >= 0) {
+  if (self.isDragging && self.scrollView.contentOffset.y >= 0) {
       NSNumber *percentage = [NSNumber numberWithFloat: 1.0 - (self.scrollView.contentOffset.y / YXTPullUpThreshold)];
     [self pullUpTransitToNextViewByPercentage:percentage];
   }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-  if (self.isLoading) return;
   self.isDragging = YES;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-  if (self.isLoading) return;
   self.isDragging = NO;
   
   if(scrollView.contentOffset.y > 0 && self.scrollView.contentOffset.y >= YXTPullUpThreshold) {
-    [self startLoading];
+    [self pullUpDidFinish];
   }
   [self resetToolbar];
 }
@@ -173,24 +168,10 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   
   self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width, self.scrollView.contentSize.height);
   self.scrollView.scrollEnabled = NO;
-  [self stopLoading];
 }
 
 - (void)pullUpTransitToNextViewByPercentage:(NSNumber *)percentage {
   self.toolbarVC.view.alpha = [percentage floatValue];
-}
-
-- (void)startLoading {
-  if (self.isLoading) {
-    return;
-  }
-  self.isLoading = YES;
-  
-  [self pullUpDidFinish];
-}
-
-- (void)stopLoading {
-  self.isLoading = NO;
 }
 
 - (void)resetToolbar {
