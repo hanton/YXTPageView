@@ -5,3 +5,5 @@ UIView (at the top)
   + 
 
 UITableView (at the bottom)
+
+![image](https://github.com/hanton/YXTPageView/raw/master/screenshots/YXTPageView.gif)

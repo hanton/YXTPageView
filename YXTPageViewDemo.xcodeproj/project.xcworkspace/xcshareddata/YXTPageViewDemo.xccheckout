@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>CDE17DD7-0AAD-4394-8A9F-CDD438751562</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>YXTPageViewDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>8E104D291BE97E78E4EC1D19E5EE28A576F3F657</key>
 		<string>github.com:hanton/YXTPageView.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>YXTPageViewDemo.xcodeproj/project.xcworkspace</string>
+	<string>YXTPageViewDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8E104D291BE97E78E4EC1D19E5EE28A576F3F657</key>
