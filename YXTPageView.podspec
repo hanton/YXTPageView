@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.summary      = "Scrolling to transition between a UIView and a UITableView."
 
   s.description  = <<-DESC
-                   Scrolling to transition between a UIView and a UITableView
+                   A Page View, which support scrolling to transition between a UIView and a UITableView.
                    DESC
 
   s.homepage     = "https://github.com/hanton/YXTPageView"

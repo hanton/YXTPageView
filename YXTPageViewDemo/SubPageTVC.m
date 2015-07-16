@@ -25,6 +25,7 @@ static NSString* const SubPageCellIdentifier = @"SubPageCell";
   self.tableView.delegate = self;
   self.tableView.dataSource = self;
   self.tableView.showsVerticalScrollIndicator = NO;
+  self.tableView.backgroundColor = [UIColor colorWithRed:213.0/255.0 green:197.0/255.0 blue:174.0/255.0 alpha:1.0];
   //  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   
   self.clearsSelectionOnViewWillAppear = YES;
