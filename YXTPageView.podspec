@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "YXTPageView"
-  s.version      = "0.1.0"
+  s.version      = "0.2.0"
   s.summary      = "Scrolling to transition between a UIView and a UITableView."
 
   s.description  = <<-DESC
