@@ -26,7 +26,7 @@ static NSString* const SubPageCellIdentifier = @"SubPageCell";
   self.tableView.dataSource = self;
   self.tableView.showsVerticalScrollIndicator = NO;
   self.tableView.backgroundColor = [UIColor colorWithRed:213.0/255.0 green:197.0/255.0 blue:174.0/255.0 alpha:1.0];
-  //  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
   
   self.clearsSelectionOnViewWillAppear = YES;
 }
@@ -38,7 +38,7 @@ static NSString* const SubPageCellIdentifier = @"SubPageCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 28;
+  return 10;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -69,9 +69,10 @@ static const CGFloat YXTPullUpThreshold = 50.0;
   [self.mainButton addTarget:self
                       action:@selector(didPressedMainButton)
             forControlEvents:UIControlEventTouchUpInside];
-  [self.mainButton setBackgroundColor:[UIColor grayColor]];
-  CGFloat mainButtonHeight = 50.0;
-  CGFloat mainButtonWidth = 50.0;
+//  [self.mainButton setBackgroundColor:[UIColor grayColor]];
+  [self.mainButton setImage:[UIImage imageNamed:@"Main"] forState:UIControlStateNormal];
+  CGFloat mainButtonHeight = 60.0;
+  CGFloat mainButtonWidth = 60.0;
   CGFloat mainButtonX = (CGRectGetWidth(self.view.frame) - mainButtonWidth) / 2.0;
   CGFloat mainButtonY = (CGRectGetHeight(self.view.frame) - mainButtonHeight) - 8.0;
   self.mainButton.frame = CGRectMake(mainButtonX, mainButtonY, mainButtonWidth, mainButtonHeight);
