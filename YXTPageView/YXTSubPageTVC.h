@@ -12,7 +12,6 @@
 
 @interface YXTSubPageTVC : UITableViewController
 @property (nonatomic, weak) id<YXTSubPageDelegate> delegate;
-//@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) UIViewController *mainViewController;
 
 @end
