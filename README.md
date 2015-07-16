@@ -1,5 +1,5 @@
 # YXTPageView
-##Scrolling to transition between a UIView and a UITableView
+##A Page View, which support scrolling to transition between a UIView and a UITableView
 UIView (at the top)
 
   + 
